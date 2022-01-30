@@ -12,10 +12,18 @@ class PicturesController extends AppController {
     }
 
     public function view() {
-        $pictures = glob('img\*.jpg');
         $limit = $_GET['limit']??-1;
         $name = $_GET['name']??-1;
+        $exif = array();
         $cpt = 0;
+
+        if ($name == -1) {
+            $pictures = glob('img\*.jpg');
+        }    
+        else {
+            $pictures = glob('img\\'. $name . '.jpg');
+        }
+        
         foreach($pictures as $image) {
             if ($cpt < $limit || $limit == -1) {
                 $exif[$image]['description'] = exif_read_data($image)['ImageDescription']??'No descritpion';
@@ -26,13 +34,8 @@ class PicturesController extends AppController {
                 $exif[$image]['html'] = '<img src=..\\' . $image . ' alt=' . $exif[$image]['comment'] . '>';
                 $cpt++;
             }
-        }
-        if ($name == -1){
-            $json = json_encode($exif);
-        }
-        else {
-            $json = json_encode($exif['img\\' . $name]);
-        }
+        }            
+        $json = json_encode($exif);
         $response = $this->response->withStringBody($json);
         return $response;
     }
