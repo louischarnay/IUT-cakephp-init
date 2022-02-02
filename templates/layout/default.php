@@ -19,6 +19,7 @@
 <html lang="fr">
     <head>  
         <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
         <?php 
             $this->fetch('title');
             $this->fetch('css');
@@ -27,14 +28,14 @@
     <body class="body">
         <header class="header">
             <?php 
-                $this->fetch('banner');
-                $this->fetch('header');            
+                $this->element('banner');
+                $this->element('navbar');            
             ?>
         </header>
-        <main class="main">
-
-        </main>
-        <?php $this->fetch('footer') ?>
-        <?php $this->fetch('script') ?>
+        <main class="main"> </main>
+        <?php 
+            $this->element('footer');
+            $this->fetch('script');
+        ?>
     </body>
 </html>
