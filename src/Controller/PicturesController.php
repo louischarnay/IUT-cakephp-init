@@ -48,14 +48,17 @@ class PicturesController extends AppController {
         }
         else {
             foreach($pictures as $image) {
+                $exif[$image]['name'] = exif_read_data($image)['FileName']??'No name';
                 $exif[$image]['description'] = exif_read_data($image)['ImageDescription']??'No descritpion';
                 $exif[$image]['comment'] = exif_read_data($image)['COMPUTED']['UserComment']??'No Comment';
                 $exif[$image]['author'] = exif_read_data($image)['Artist']??'No author';
                 $exif[$image]['width'] = exif_read_data($image)['COMPUTED']['Width']??'No width';
                 $exif[$image]['height'] = exif_read_data($image)['COMPUTED']['Height']??'No height';
                 $exif[$image]['html'] = '<img src=\\..\\' . $image . ' alt=' . $exif[$image]['comment'] . '>';
+                $this->set(compact('image'));
+                $this->set(compact('exif'));
             }
         }
-        $this->set(compact('exif'));
+        
     }
 }
