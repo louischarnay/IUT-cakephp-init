@@ -13,15 +13,16 @@
  * @license       https://opensource.org/licenses/mit-license.php MIT License
  * @var \App\View\AppView $this
  */
-
-$cakeDescription = 'CakePHP: the rapid development php framework';
 ?>
 
 <!DOCTYPE html>
 <html lang="fr">
     <head>  
         <meta charset="UTF-8">
-        <Title>Title</Title>
+        <?php 
+            $this->fetch('title');
+            $this->fetch('css');
+        ?>
     </head>
     <body class="body">
         <header class="header">
@@ -33,8 +34,7 @@ $cakeDescription = 'CakePHP: the rapid development php framework';
         <main class="main">
 
         </main>
-        <footer class="footer">
-            <?php $this->fetch('footer'); ?>
-        </footer>
+        <?php $this->fetch('footer') ?>
+        <?php $this->fetch('script') ?>
     </body>
 </html>
