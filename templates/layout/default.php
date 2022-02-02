@@ -22,7 +22,7 @@
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <?php 
             $this->fetch('title');
-            $this->fetch('css');
+            $this->Html->css(['style'])
         ?>
     </head>
     <body class="body">
@@ -35,7 +35,8 @@
         <main class="main"> </main>
         <?php 
             $this->element('footer');
-            $this->fetch('script');
+            $this->Html->script('script');
+            $this->Html->script('transitions');
         ?>
     </body>
 </html>

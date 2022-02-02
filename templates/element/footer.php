@@ -9,8 +9,8 @@
         <a href="contact.php">Contact</a>
         <a href="index.php">Présentation</a>
         <?php
-        $db = new db();
-        $lastArticle = $db->getLastsArticles(false);
+            $db = new db();
+            $lastArticle = $db->getLastsArticles(false);
         ?>
         <a href="blog.php?article=<?php echo $lastArticle['id'] ?>" class="sousMenuArticle">Article récent</a>
     </div>
