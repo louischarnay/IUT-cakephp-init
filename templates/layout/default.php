@@ -27,12 +27,11 @@
     </head>
     <body class="body">
         <header class="header">
-            <?php 
-                $this->element('banner');
-                $this->element('navbar');            
-            ?>
+            <?php $this->element('banner'); ?>
         </header>
-        <main class="main"> </main>
+        <main class="main">
+            
+        </main>
         <?php 
             $this->element('footer');
             $this->Html->script('script');
