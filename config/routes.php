@@ -21,6 +21,7 @@
  * @license       https://opensource.org/licenses/mit-license.php MIT License
  */
 
+use Cake\Controller\Controller;
 use Cake\Routing\Route\DashedRoute;
 use Cake\Routing\RouteBuilder;
 
@@ -56,6 +57,8 @@ return static function (RouteBuilder $routes) {
          * ...and connect the rest of 'Pages' controller's URLs.
          */
         $builder->connect('/pages/*', 'Pages::display');
+        
+        $builder->connect('/pictures/view', ['controller' => 'Pictures', 'action' => 'view']);
 
         /*
          * Connect catchall routes for all controllers.
@@ -72,6 +75,8 @@ return static function (RouteBuilder $routes) {
          */
         $builder->fallbacks();
     });
+
+    
 
     /*
      * If you need a different set of middleware or none at all,

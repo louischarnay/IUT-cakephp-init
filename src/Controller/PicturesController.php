@@ -55,9 +55,7 @@ class PicturesController extends AppController {
                 $exif[$image]['height'] = exif_read_data($image)['COMPUTED']['Height']??'No height';
                 $exif[$image]['html'] = '<img src=\\..\\' . $image . ' alt=' . $exif[$image]['comment'] . '>';
             }
-            $json = json_encode($exif);
-            $response = $this->response->withStringBody($json);
-            return $response;
         }
+        $this->set(compact('exif'));
     }
 }
