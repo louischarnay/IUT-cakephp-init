@@ -3,13 +3,26 @@
 namespace App\Controller;
 
 use Cake\Http\Exception\BadRequestException;
+use PhpParser\Node\Expr\Array_;
 
 class PicturesController extends AppController {
-    public function index() {
-        $pictures = glob('img/*.jpg');
-        $json = json_encode($pictures);
-        $response = $this->response->withStringBody($json);
-        return $response;
+    public function index(int $page) {
+        $pictures = glob('img/imgAPI/*.jpg');
+        $json = Array();
+        $index = 0;
+        if ($page * 10 - 10 >= sizeof($pictures))
+            throw new BadRequestException;
+        for ($cpt = $page * 10 - 10; $cpt < $page * 10; $cpt++){
+            if($cpt < sizeof($pictures)){
+                $json[$index] = '<img src=\\..\\'. $pictures[$cpt] .' alt="image">';
+                $index++;
+            }
+        }
+        $array = Array(
+            'title' => 'Accueil | Page ' . $page,
+            'content' => $json
+        );
+        $this->set(compact('array'));
     }
 
     public function view() {

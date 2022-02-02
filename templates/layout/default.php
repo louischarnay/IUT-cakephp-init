@@ -17,25 +17,25 @@
 
 <!DOCTYPE html>
 <html lang="fr">
-    <head>  
+    <head>
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1">
-        <?php 
-            $this->fetch('title');
-            $this->Html->css(['style'])
+        <?php
+            echo $this->fetch('title');
+            echo $this->Html->css(['style'])
         ?>
     </head>
     <body class="body">
         <header class="header">
-            <?php $this->element('banner'); ?>
+            <?= $this->element('banner'); ?>
         </header>
         <main class="main">
-            
+            <?= $this->fetch('content')?>
         </main>
-        <?php 
-            $this->element('footer');
-            $this->Html->script('script');
-            $this->Html->script('transitions');
+        <?php
+            echo $this->element('footer');
+            echo $this->Html->script('script');
+            echo $this->Html->script('transitions');
         ?>
     </body>
 </html>
