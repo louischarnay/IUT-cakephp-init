@@ -25,14 +25,16 @@ $cakeDescription = 'CakePHP: the rapid development php framework';
     </head>
     <body class="body">
         <header class="header">
-            <?php include_once '../elements/banner.php' ?>
-            <?php include_once '../elements/header.php' ?>
+            <?php 
+                $this->fetch('banner');
+                $this->fetch('header');            
+            ?>
         </header>
         <main class="main">
 
         </main>
         <footer class="footer">
-            <?php include_once '../elements/footer.php' ?>
+            <?php $this->fetch('footer'); ?>
         </footer>
     </body>
 </html>
