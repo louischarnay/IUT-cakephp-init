@@ -90,4 +90,11 @@ class PicturesController extends AppController {
         }
         $this->set(compact('title'));
     }
+
+    public function test() {
+        $pictures = $this->Pictures
+            ->find()
+            ->first();
+        dd($pictures);
+    }
 }
