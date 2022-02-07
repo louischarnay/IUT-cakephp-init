@@ -20,10 +20,8 @@
     <head>
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1">
-        <?php
             echo $this->fetch('title');
             echo $this->Html->css(['style'])
-        ?>
     </head>
     <body class="body">
         <header class="header">

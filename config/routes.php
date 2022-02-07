@@ -21,6 +21,7 @@
  * @license       https://opensource.org/licenses/mit-license.php MIT License
  */
 
+use Cake\Controller\Controller;
 use Cake\Routing\Route\DashedRoute;
 use Cake\Routing\RouteBuilder;
 
@@ -72,6 +73,8 @@ return static function (RouteBuilder $routes) {
          */
         $builder->fallbacks();
     });
+
+    
 
     /*
      * If you need a different set of middleware or none at all,
