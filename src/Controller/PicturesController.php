@@ -72,6 +72,22 @@ class PicturesController extends AppController {
                 $this->set(compact('exif'));
             }
         }
-        
+
+    }
+
+    public function add() {
+        $title = 'Add Picture';
+        $tmp = $this->getRequest()->getData();
+        if ($tmp != null){
+            if (!file_exists(WWW_ROOT.'/img/imgAPI/'.$tmp['picture']->getClientFilename())){
+                $picture = $this->getRequest()->getData('picture');
+                $result = $picture->moveTo(WWW_ROOT. 'img/imgAPI/'.$tmp['picture']->getClientFileName());
+            } else {
+                $error = 'fichier déjà existant';
+                $this->set(compact('error'));
+            }
+            $this->set(compact('tmp'));
+        }
+        $this->set(compact('title'));
     }
 }
