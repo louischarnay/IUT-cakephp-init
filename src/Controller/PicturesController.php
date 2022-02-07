@@ -55,7 +55,7 @@ class PicturesController extends AppController {
     }
 
     public function select($name) {
-        $pictures = glob('img\\'. $name . '.jpg');
+        $pictures = glob('img\\imgAPI\\'. $name . '.jpg');
         if ($pictures == null){
             throw new BadRequestException;
         }

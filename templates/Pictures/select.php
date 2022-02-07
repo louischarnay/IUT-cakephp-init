@@ -6,5 +6,5 @@
 <p>Author : <?= $exif[$image]['author'] ?></p>
 <p>Width : <?= $exif[$image]['width'] ?></p>
 <p>Height : <?= $exif[$image]['height'] ?></p>
-<?php $root = 'http://projetcakephp.test/img/' . $exif[$image]['name'] ?>
+<?php $root = 'http://projetcakephp.test/img/imgAPI/' . $exif[$image]['name'] ?>
 <a href=<?=$root?> download=<?= $exif[$image]['name'] ?>>Télécharger l'image</a>
