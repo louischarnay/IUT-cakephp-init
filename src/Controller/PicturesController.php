@@ -94,16 +94,27 @@ class PicturesController extends AppController {
 
     public function add() {
         $title = 'Add Picture';
-        $tmp = $this->getRequest()->getData();
-        if ($tmp != null){
-            if (!file_exists(WWW_ROOT.'/img/imgAPI/'.$tmp['picture']->getClientFilename())){
-                $picture = $this->getRequest()->getData('picture');
-                $result = $picture->moveTo(WWW_ROOT. 'img/imgAPI/'.$tmp['picture']->getClientFileName());
+        $request = $this->getRequest()->getData();
+        if ($request != null){
+            if (!file_exists(WWW_ROOT.'/img/imgAPI/'.$request['picture']->getClientFilename())){
+                $file = $this->getRequest()->getData('picture');
+                $file->moveTo(WWW_ROOT. 'img/imgAPI/'.$request['picture']->getClientFileName());
+                $exif = exif_read_data((WWW_ROOT. 'img/imgAPI/'.$request['picture']->getClientFileName()));
+                $data = Array(
+                'name' => $request['name'],
+                'path' => 'imgAPI/'.$request['picture']->getClientFileName(),
+                'description' => $request['description'],
+                'width' => $exif['COMPUTED']['Width'],
+                'height' => $exif['COMPUTED']['Height']
+                );
+                $picture = $this->Pictures->newEmptyEntity();
+                $this->Pictures->patchEntity($picture, $data);
+                $this->Pictures->save($picture);
             } else {
                 $error = 'fichier déjà existant';
                 $this->set(compact('error'));
             }
-            $this->set(compact('tmp'));
+            $this->set(compact('request'));
         }
         $this->set(compact('title'));
     }
