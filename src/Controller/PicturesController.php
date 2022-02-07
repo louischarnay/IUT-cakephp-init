@@ -74,4 +74,11 @@ class PicturesController extends AppController {
         }
         
     }
+
+    public function test() {
+        $pictures = $this->Pictures
+            ->find()
+            ->first();
+        dd($pictures);
+    }
 }
