@@ -60,9 +60,13 @@ class PicturesController extends AppController {
                 $exif[$image->name]['width'] = exif_read_data($image->path)['COMPUTED']['Width']??'No width';
                 $exif[$image->name]['height'] = exif_read_data($image->path)['COMPUTED']['Height']??'No height';
                 $exif[$image->name]['html'] = '<img src=..\\' . $image->path . ' alt=' . $exif[$image->name]['comment'] . '>';
+                $exif[$image->name]['created'] = $image->created;
+                $exif[$image->name]['modified'] = $image->modified;
                 $cpt2 = 0;
                 foreach($image['comments'] as $comment){
-                    $exif[$image->name]['comments'][$cpt2] = $comment->content;
+                    $exif[$image->name]['comments'][$cpt2]['content'] = $comment->content;
+                    $exif[$image->name]['comments'][$cpt2]['created'] = $comment->created;
+                    $exif[$image->name]['comments'][$cpt2]['modified'] = $comment->modified;
                     $cpt2++;
                 }
                 $cpt++;
@@ -91,11 +95,14 @@ class PicturesController extends AppController {
                 $exif[$image->name]['width'] = exif_read_data($image->path)['COMPUTED']['Width']??'No width';
                 $exif[$image->name]['height'] = exif_read_data($image->path)['COMPUTED']['Height']??'No height';
                 $exif[$image->name]['html'] = '<img src=\\..\\' . $image->path . ' alt=' . $exif[$image->name]['comment'] . '>';
+                $exif[$image->name]['created'] = $image->created;
+                $exif[$image->name]['modified'] = $image->modified;
                 $cpt = 0;
                 foreach($image['comments'] as $comment){
-                    $comments[$image->name][$cpt] = $comment->content;
+                    $comments[$image->name][$cpt]['name'] = $comment->content;
+                    $comments[$image->name][$cpt]['created'] = $comment->created;
+                    $comments[$image->name][$cpt]['modified'] = $comment->modified;
                 }
-                //dd($comments[$image->name][0]);
                 $this->set(compact('image'));
                 $this->set(compact('exif'));
                 $this->set(compact('comments'));
