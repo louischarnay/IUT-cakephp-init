@@ -12,8 +12,10 @@
 <?php
     $cpt = 0;
     if(isset($comments)){
+        $cpt = 1;
         foreach ($comments[$image->name] as $comment){
-            echo '<p>N°' . $cpt . ' : ' . $comment;
+            echo '<p>N°' . $cpt . ' : ' . $comment['name'] . ' | Created : ' . $comment['created'] . ' | Last update : ' . $comment['modified'];
+            $cpt++;
         }
     }else{
         ?><p>There is no comment yet on this picture</p><?php
@@ -23,8 +25,4 @@ echo $this->Form->create(null, array('url'=>['controller'=>'Comments', 'action'=
 echo $this->Form->control('content');
 echo $this->Form->button('add');
 echo $this->Form->end();
-    $cpt = 1;
-    foreach ($comments[$image->name] as $comment){
-        echo '<p>N°' . $cpt . ' : ' . $comment['name'] . ' | Created : ' . $comment['created'] . ' | Last update : ' . $comment['modified'];
-        $cpt++;
-    }
+
