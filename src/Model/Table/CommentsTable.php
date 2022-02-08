@@ -9,5 +9,6 @@ class CommentsTable extends Table {
     {
         parent::initialize($config);
         $this->belongsTo('Pictures');
+        $this->addBehavior('Timestamp');
     }
 }

@@ -9,5 +9,6 @@ class PicturesTable extends Table {
     {
         parent::initialize($config);
         $this->hasMany('Comments');
+        $this->addBehavior('Timestamp');
     }
 }

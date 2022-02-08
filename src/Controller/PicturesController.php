@@ -136,8 +136,4 @@ class PicturesController extends AppController {
             ->first();
         dd($pictures);
     }
-
-    public function addComment(){
-
-    }
 }
