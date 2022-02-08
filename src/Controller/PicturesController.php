@@ -17,7 +17,7 @@ class PicturesController extends AppController {
             throw new BadRequestException;
         for ($cpt = $page * 10 - 10; $cpt < $page * 10; $cpt++){
             if($cpt < sizeof($pictures)){
-                $result[$index] = '<img src=\\..\\'. $pictures[$cpt]->path .' alt="image">';
+                $result[$index] = 'src=../../img/'. $pictures[$cpt]->path .' alt="image n°' . $index . '"';
                 $index++;
             }
         }
