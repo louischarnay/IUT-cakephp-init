@@ -73,12 +73,14 @@ class PicturesController extends AppController {
             ->find()
             ->select(['name', 'path'])
             ->where(['name LIKE' => $name])
+            ->contain('Comments')
             ->toArray();
         if ($pictures == null){
             throw new BadRequestException;
         }
         else {
             foreach($pictures as $image) {
+                dd($image);
                 $exif[$image->name]['name'] = exif_read_data($image->path)['FileName']??'No name';
                 $exif[$image->name]['description'] = exif_read_data($image->path)['ImageDescription']??'No descritpion';
                 $exif[$image->name]['comment'] = exif_read_data($image->path)['COMPUTED']['UserComment']??'No Comment';
