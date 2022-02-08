@@ -12,7 +12,8 @@
 <a href=<?=$root?> download=<?= $exif[$image->name]['name'] ?>>Télécharger l'image</a>
 <h2>Commentaires :</h2>
 <?php
-    $cpt = 0;
+    $cpt = 1;
     foreach ($comments[$image->name] as $comment){
         echo '<p>N°' . $cpt . ' : ' . $comment['name'] . ' | Created : ' . $comment['created'] . ' | Last update : ' . $comment['modified'];
+        $cpt++;
     }

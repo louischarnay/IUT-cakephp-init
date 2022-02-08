@@ -104,6 +104,7 @@ class PicturesController extends AppController {
                     $comments[$image->name][$cpt]['name'] = $comment->content;
                     $comments[$image->name][$cpt]['created'] = $comment->created;
                     $comments[$image->name][$cpt]['modified'] = $comment->modified;
+                    $cpt++;
                 }
                 $this->set(compact('image'));
                 $this->set(compact('exif'));
