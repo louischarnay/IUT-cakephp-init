@@ -37,13 +37,13 @@ class PicturesController extends AppController {
         if ($name == -1) {
             $pictures = $this->Pictures
                 ->find()
-                ->all()
+                ->contain('Comments')
                 ->toArray();
         }
         else {
             $pictures = $this->Pictures
                 ->find()
-                ->select(['name', 'path'])
+                ->contain('Comments')
                 ->where(['name LIKE' => $name])
                 ->toArray();
         }
@@ -60,6 +60,11 @@ class PicturesController extends AppController {
                 $exif[$image->name]['width'] = exif_read_data($image->path)['COMPUTED']['Width']??'No width';
                 $exif[$image->name]['height'] = exif_read_data($image->path)['COMPUTED']['Height']??'No height';
                 $exif[$image->name]['html'] = '<img src=..\\' . $image->path . ' alt=' . $exif[$image->name]['comment'] . '>';
+                $cpt2 = 0;
+                foreach($image['comments'] as $comment){
+                    $exif[$image->name]['comments'][$cpt2] = $comment->content;
+                    $cpt2++;
+                }
                 $cpt++;
             }
         }
@@ -71,7 +76,7 @@ class PicturesController extends AppController {
     public function select($name) {
         $pictures = $this->Pictures
             ->find()
-            ->select(['name', 'path'])
+            ->contain('Comments')
             ->where(['name LIKE' => $name])
             ->toArray();
         if ($pictures == null){
@@ -86,8 +91,14 @@ class PicturesController extends AppController {
                 $exif[$image->name]['width'] = exif_read_data($image->path)['COMPUTED']['Width']??'No width';
                 $exif[$image->name]['height'] = exif_read_data($image->path)['COMPUTED']['Height']??'No height';
                 $exif[$image->name]['html'] = '<img src=\\..\\' . $image->path . ' alt=' . $exif[$image->name]['comment'] . '>';
+                $cpt = 0;
+                foreach($image['comments'] as $comment){
+                    $comments[$image->name][$cpt] = $comment->content;
+                }
+                //dd($comments[$image->name][0]);
                 $this->set(compact('image'));
                 $this->set(compact('exif'));
+                $this->set(compact('comments'));
             }
         }
     }
