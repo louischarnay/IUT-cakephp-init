@@ -84,18 +84,19 @@ class PicturesController extends AppController {
         }
         else {
             foreach($pictures as $image) {
-                $exif[$image->name]['name'] = exif_read_data($image->path)['FileName']??'No name';
-                $exif[$image->name]['description'] = exif_read_data($image->path)['ImageDescription']??'No descritpion';
-                $exif[$image->name]['comment'] = exif_read_data($image->path)['COMPUTED']['UserComment']??'No Comment';
-                $exif[$image->name]['author'] = exif_read_data($image->path)['Artist']??'No author';
-                $exif[$image->name]['width'] = exif_read_data($image->path)['COMPUTED']['Width']??'No width';
-                $exif[$image->name]['height'] = exif_read_data($image->path)['COMPUTED']['Height']??'No height';
-                $exif[$image->name]['html'] = '<img src=\\..\\' . $image->path . ' alt=' . $exif[$image->name]['comment'] . '>';
+                $path = 'img/'.$image->path;
+                $exif[$image->name]['name'] = exif_read_data($path)['FileName']??'No name';
+                $exif[$image->name]['description'] = exif_read_data($path)['ImageDescription']??'No description';
+                $exif[$image->name]['comment'] = exif_read_data($path)['COMPUTED']['UserComment']??'No Comment';
+                $exif[$image->name]['author'] = exif_read_data($path)['Artist']??'No author';
+                $exif[$image->name]['width'] = exif_read_data($path)['COMPUTED']['Width']??'No width';
+                $exif[$image->name]['height'] = exif_read_data($path)['COMPUTED']['Height']??'No height';
+                $exif[$image->name]['html'] = '<img src=\\..\\' . $path . ' alt=' . $exif[$image->name]['comment'] . '>';
                 $cpt = 0;
+                $comments = null;
                 foreach($image['comments'] as $comment){
                     $comments[$image->name][$cpt] = $comment->content;
                 }
-                //dd($comments[$image->name][0]);
                 $this->set(compact('image'));
                 $this->set(compact('exif'));
                 $this->set(compact('comments'));

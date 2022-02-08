@@ -11,6 +11,15 @@
 <h2>Commentaires :</h2>
 <?php
     $cpt = 0;
-    foreach ($comments[$image->name] as $comment){
-        echo '<p>N°' . $cpt . ' : ' . $comment;
+    if(isset($comments)){
+        foreach ($comments[$image->name] as $comment){
+            echo '<p>N°' . $cpt . ' : ' . $comment;
+        }
+    }else{
+        ?><p>There is no comment yet on this picture</p><?php
     }
+?><p>Add your commment</p><?php
+echo $this->Form->create(null, array('url'=>['controller'=>'Comments', 'action'=>'add', $image->id]));
+echo $this->Form->control('content');
+echo $this->Form->button('add');
+echo $this->Form->end();
