@@ -95,7 +95,10 @@ class PicturesController extends AppController {
                 $cpt = 0;
                 $comments = null;
                 foreach($image['comments'] as $comment){
-                    $comments[$image->name][$cpt] = $comment->content;
+                    $comments[$image->name][$cpt]['name'] = $comment->content;
+                    $comments[$image->name][$cpt]['created'] = $comment->created;
+                    $comments[$image->name][$cpt]['modified'] = $comment->modified;
+                    $cpt++;
                 }
                 $this->set(compact('image'));
                 $this->set(compact('exif'));

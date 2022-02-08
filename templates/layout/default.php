@@ -27,7 +27,10 @@
     </head>
     <body class="body">
         <header class="header">
-            <?= $this->element('banner'); ?>
+            <?php
+                echo $this->element('banner');
+                echo $this->element('header');
+            ?>
         </header>
         <main class="main">
             <?= $this->fetch('content')?>

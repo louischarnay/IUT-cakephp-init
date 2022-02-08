@@ -23,3 +23,8 @@ echo $this->Form->create(null, array('url'=>['controller'=>'Comments', 'action'=
 echo $this->Form->control('content');
 echo $this->Form->button('add');
 echo $this->Form->end();
+    $cpt = 1;
+    foreach ($comments[$image->name] as $comment){
+        echo '<p>N°' . $cpt . ' : ' . $comment['name'] . ' | Created : ' . $comment['created'] . ' | Last update : ' . $comment['modified'];
+        $cpt++;
+    }
