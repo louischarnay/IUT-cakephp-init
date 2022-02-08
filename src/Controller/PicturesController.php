@@ -54,12 +54,13 @@ class PicturesController extends AppController {
 
         foreach($pictures as $image) {
             if ($cpt < $limit || $limit == -1) {
-                $exif[$image->name]['description'] = exif_read_data($image->path)['ImageDescription']??'No description';
-                $exif[$image->name]['comment'] = exif_read_data($image->path)['COMPUTED']['UserComment']??'No Comment';
-                $exif[$image->name]['author'] = exif_read_data($image->path)['Artist']??'No author';
-                $exif[$image->name]['width'] = exif_read_data($image->path)['COMPUTED']['Width']??'No width';
-                $exif[$image->name]['height'] = exif_read_data($image->path)['COMPUTED']['Height']??'No height';
-                $exif[$image->name]['html'] = '<img src=..\\' . $image->path . ' alt=' . $exif[$image->name]['comment'] . '>';
+                $path = 'img/' . $image->path;
+                $exif[$image->name]['description'] = exif_read_data($path)['ImageDescription']??'No description';
+                $exif[$image->name]['comment'] = exif_read_data($path)['COMPUTED']['UserComment']??'No Comment';
+                $exif[$image->name]['author'] = exif_read_data($path)['Artist']??'No author';
+                $exif[$image->name]['width'] = exif_read_data($path)['COMPUTED']['Width']??'No width';
+                $exif[$image->name]['height'] = exif_read_data($path)['COMPUTED']['Height']??'No height';
+                $exif[$image->name]['html'] = 'src=../' . $path . ' alt=' . $exif[$image->name]['comment'];
                 $exif[$image->name]['created'] = $image->created;
                 $exif[$image->name]['modified'] = $image->modified;
                 $cpt2 = 0;
@@ -88,13 +89,14 @@ class PicturesController extends AppController {
         }
         else {
             foreach($pictures as $image) {
-                $exif[$image->name]['name'] = exif_read_data($image->path)['FileName']??'No name';
-                $exif[$image->name]['description'] = exif_read_data($image->path)['ImageDescription']??'No descritpion';
-                $exif[$image->name]['comment'] = exif_read_data($image->path)['COMPUTED']['UserComment']??'No Comment';
-                $exif[$image->name]['author'] = exif_read_data($image->path)['Artist']??'No author';
-                $exif[$image->name]['width'] = exif_read_data($image->path)['COMPUTED']['Width']??'No width';
-                $exif[$image->name]['height'] = exif_read_data($image->path)['COMPUTED']['Height']??'No height';
-                $exif[$image->name]['html'] = '<img src=\\..\\' . $image->path . ' alt=' . $exif[$image->name]['comment'] . '>';
+                $path = 'img/' . $image->path;
+                $exif[$image->name]['name'] = exif_read_data($path)['FileName']??'No name';
+                $exif[$image->name]['description'] = exif_read_data($path)['ImageDescription']??'No descritpion';
+                $exif[$image->name]['comment'] = exif_read_data($path)['COMPUTED']['UserComment']??'No Comment';
+                $exif[$image->name]['author'] = exif_read_data($path)['Artist']??'No author';
+                $exif[$image->name]['width'] = exif_read_data($path)['COMPUTED']['Width']??'No width';
+                $exif[$image->name]['height'] = exif_read_data($path)['COMPUTED']['Height']??'No height';
+                $exif[$image->name]['html'] = 'src=/' . $path . ' alt=' . $exif[$image->name]['comment'];
                 $exif[$image->name]['created'] = $image->created;
                 $exif[$image->name]['modified'] = $image->modified;
                 $cpt = 0;
