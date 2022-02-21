@@ -1,18 +1,15 @@
 <?=$this->Form->create(null, array('url'=>['controller'=>'Users', 'action'=>'signin']));
-echo $this->Form->control('email', [
-    'label' => "Username",
+echo $this->Form->text('email', [
     'required' => "true",
-    'placeholder' => "Username"
+    'placeholder' => "Email"
 ]);
-echo $this->Form->control('password', [
-    'label' => "Password",
+echo $this->Form->password('password', [
     'required' => "true",
     'placeholder' => "Password"
 ]);
-echo $this->Form->control('password', [
-    'label' => "Confirm password",
-    'required' => "true",
-    'placeholder' => "password"
+echo $this->Form->password('confirm', [
+    'required' => 'true',
+    'placeholder' => "Confirm password"
 ]);
-echo $this->Form->button('register');
+echo $this->Form->button('Sign in');
 echo $this->Form->end();

@@ -7,7 +7,14 @@ use Cake\Http\Exception\BadRequestException;
 use PhpParser\Node\Expr\Array_;
 
 class PicturesController extends AppController {
+    public function initialize(): void
+    {
+        parent::initialize();
+        $this->Authentication->allowUnauthenticated(['view', 'index', 'select']);
+    }
     public function index(int $page) {
+        $isConnected = $this->Authentication->getresult();
+        $this->set(compact($isConnected->isValid()));
         $pictures = $this->Pictures
             ->find()
             ->all()
@@ -15,7 +22,7 @@ class PicturesController extends AppController {
         $index = 0;
         if ($page * 10 - 10 >= sizeof($pictures))
             throw new BadRequestException;
-        for ($cpt = $page * 10 - 10; $cpt < $page * 10; $cpt++){
+        for ($cpt = $page * 10 - 10; $cpt < $page * 10 + 1; $cpt++){
             if($cpt < sizeof($pictures)){
                 $result[$index] = '<img src=\\..\\img\\'. $pictures[$cpt]->path .' alt="image">';
                 $index++;
@@ -108,6 +115,12 @@ class PicturesController extends AppController {
                 $this->set(compact('exif'));
                 $this->set(compact('comments'));
             }
+            $isConnected = false;
+            $connection = $this->Authentication->getResult();
+            if($connection->isValid()){
+                $isConnected = true;
+            }
+            $this->set(compact('isConnected'));
         }
     }
 
@@ -131,7 +144,7 @@ class PicturesController extends AppController {
                 $this->Pictures->save($picture);
                 $this->set(compact('data'));
             } else {
-                $error = 'fichier déjà existant';
+                $error = 'Fichier déjà existant';
                 $this->set(compact('error'));
             }
         }

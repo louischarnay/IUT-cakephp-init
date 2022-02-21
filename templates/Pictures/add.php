@@ -9,10 +9,10 @@ if(!isset($data)){
     echo $this->Form->input('picture', array('type' => 'file'));
     echo $this->Form->button('add');
     echo $this->Form->end();
-}
-else{
     if (isset($error)) {
         echo $error;
-    }else {?>
-    <p>Picture <?= $data['name'] ?> has been successfully added with the following description : <?= $data['description'] ?></p>
-<?php }}
+    }
+}
+else{?>
+     <p>Picture <?= $data['name'] ?> has been successfully added with the following description : <?= $data['description'] ?></p>
+<?php }

@@ -10,14 +10,19 @@
             <li><a href="/inscription.php" <?php if($_SERVER["SCRIPT_NAME"] == "/inscription.php"){
                 ?>class="active"
                     <?php } ?>>INSCRIPTION</a></li>
-            <li>
-                <?php
-                if(isset($_SESSION['id'])): ?>
-                    <a href="/decoTraitement.php">DECONNEXION</a>
-                <?php else: ?>
-                    <a href="/login.php">LOGIN</a>
-                <?php endif ?>
-            </li>
+            <?php
+                echo '<li>'.$this->Html->link(
+                    'LOG OUT',
+                    ['controller' => 'Users', 'action' => 'logout', '_full' => true]
+                    ).'</li>';
+                echo '<li>'.$this->Html->link(
+                    'LOGIN',
+                    ['controller' => 'Users', 'action' => 'login', '_full' => true]
+                ).'</li>';
+                echo '<li>'.$this->Html->link(
+                    'SIGN IN',
+                    ['controller' => 'Users', 'action' => 'signin', '_full' => true]
+                ).'</li>';?>
         </ul>
     </nav>
 </div>

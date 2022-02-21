@@ -24,9 +24,35 @@ class UsersController extends AppController
     }
 
     public function signin(){
-        $user = ['email' => 'mail@gmail.com', 'password' => 'azef'];
-        $userEntity = $this->Users->newEntity($user);
-        $this->Users->save($userEntity);
-        die('ok');
+        $result = $this->request->getData();
+        if($result) {
+            $allUsers = $this->Users
+                ->find()
+                ->all()
+                ->toArray();
+            $isExisting = false;
+            for ($cpt = 0; $cpt < sizeof($allUsers); $cpt ++){
+                if($allUsers[$cpt]['email'] == $result['email']) $isExisting = true;
+            }
+            if(!$isExisting){
+                if($result['password'] == $result['confirm']){
+                    $user = ['email' => $result['email'], 'password' => $result['password']];
+                    $userEntity = $this->Users->newEntity($user);
+                    $this->Users->save($userEntity);
+                    $target = $this->Authentication->getLoginRedirect() ?? '/';
+                    return $this->redirect($target);
+                } else {
+                    $this->Flash->error('Passwords don\'t match');
+                }
+            } else {
+                dd('Email already used');
+            }
+        }
+    }
+
+    public function logout(){
+        $this->Authentication->logout();
+        $target = $this->Authentication->getLoginRedirect() ?? '/';
+        return $this->redirect($target);
     }
 }
