@@ -5,6 +5,7 @@ namespace App\Controller;
 use App\Model\Entity\Pictures;
 use Cake\Http\Exception\BadRequestException;
 use PhpParser\Node\Expr\Array_;
+use function PHPUnit\Framework\stringEndsWith;
 
 class PicturesController extends AppController {
     public function initialize(): void
@@ -33,6 +34,7 @@ class PicturesController extends AppController {
             'content' => $result
         );
         $this->set(compact('array'));
+        $this->set(compact('page'));
     }
 
     public function view() {
@@ -121,6 +123,8 @@ class PicturesController extends AppController {
                 $isConnected = true;
             }
             $this->set(compact('isConnected'));
+            $root = WWW_ROOT.'img\imgAPI\\';
+            $this->set(compact('root'));
         }
     }
 
