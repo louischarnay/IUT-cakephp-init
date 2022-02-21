@@ -17,7 +17,7 @@ class PicturesController extends AppController {
             throw new BadRequestException;
         for ($cpt = $page * 10 - 10; $cpt < $page * 10; $cpt++){
             if($cpt < sizeof($pictures)){
-                $result[$index] = '<img src=\\..\\'. $pictures[$cpt]->path .' alt="image">';
+                $result[$index] = '<img src=\\..\\img\\'. $pictures[$cpt]->path .' alt="image">';
                 $index++;
             }
         }
@@ -118,30 +118,23 @@ class PicturesController extends AppController {
             if (!file_exists(WWW_ROOT.'/img/imgAPI/'.$request['picture']->getClientFilename())){
                 $file = $this->getRequest()->getData('picture');
                 $file->moveTo(WWW_ROOT. 'img/imgAPI/'.$request['picture']->getClientFileName());
-                $exif = exif_read_data((WWW_ROOT. 'img/imgAPI/'.$request['picture']->getClientFileName()));
+                $exif = exif_read_data((WWW_ROOT. 'img\\imgAPI\\'.$request['picture']->getClientFileName()));
                 $data = Array(
                 'name' => $request['name'],
                 'path' => 'imgAPI/'.$request['picture']->getClientFileName(),
-                'description' => $request['description'],
-                'width' => $exif['COMPUTED']['Width'],
-                'height' => $exif['COMPUTED']['Height']
+                'description' => $request['description']??null,
+                'width' => $exif['COMPUTED']['Width']??null,
+                'height' => $exif['COMPUTED']['Height']??null
                 );
                 $picture = $this->Pictures->newEmptyEntity();
                 $this->Pictures->patchEntity($picture, $data);
                 $this->Pictures->save($picture);
+                $this->set(compact('data'));
             } else {
                 $error = 'fichier déjà existant';
                 $this->set(compact('error'));
             }
-            $this->set(compact('request'));
         }
         $this->set(compact('title'));
-    }
-
-    public function test() {
-        $pictures = $this->Pictures
-            ->find()
-            ->first();
-        dd($pictures);
     }
 }
