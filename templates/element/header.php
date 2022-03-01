@@ -2,7 +2,7 @@
     <nav>
         <ul>
             <li><a href="/index.php" <?php if($_SERVER["SCRIPT_NAME"] == "/index.php"){
-                ?>class="active"
+                ?>
                     <?php } ?>>ACCUEIL</a></li>
             <?php
                 echo '<li>'.$this->Html->link(

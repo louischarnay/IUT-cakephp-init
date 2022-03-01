@@ -45,7 +45,7 @@ class UsersController extends AppController
                     $this->Flash->error('Passwords don\'t match');
                 }
             } else {
-                dd('Email already used');
+                $this->Flash->error('Email already used');
             }
         }
     }
