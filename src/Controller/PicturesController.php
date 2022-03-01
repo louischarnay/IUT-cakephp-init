@@ -76,20 +76,25 @@ class PicturesController extends AppController {
         else {
             $pictures = $this->Pictures
                 ->find()
-                ->where(['name LIKE' => $name])
+                ->contain('Users')
+                ->contain('Comments')
+                ->where(['Pictures.name LIKE' => $name])
                 ->toArray();
             $index = 0;
             if ($page * $limit - $limit >= sizeof($pictures))
                 throw new BadRequestException;
             for ($cpt = $page * $limit - $limit; $cpt < $page * $limit; $cpt++){
                 if($cpt < sizeof($pictures)){
-                    $result[$index]['path'] = $pictures[$cpt]->path;
-                    $result[$index]['name'] = $pictures[$cpt]->name;
+                    $userId = $pictures[$cpt]->user_id;
+                    $result[$index]['id'] = $pictures[$cpt]->id;
+                    $result[$index]['filename'] = $pictures[$cpt]->name;
                     $result[$index]['description'] = $pictures[$cpt]->description;
-                    $result[$index]['width'] = $pictures[$cpt]->width;
-                    $result[$index]['height'] = $pictures[$cpt]->height;
-                    $result[$index]['created'] = $pictures[$cpt]->created;
-                    $result[$index]['modified'] = $pictures[$cpt]->modified;
+                    $result[$index]['user']['name'] = $pictures[$cpt]->user->name;
+                    $result[$index]['user']['lastname'] = $pictures[$cpt]->user->lastname;
+                    $comments = $pictures[$cpt]->comments;
+                    for ($cpt2 = 0; $cpt2 < sizeof($comments); $cpt2++){
+                        $result[$index]['comments'][$cpt2] = $comments[$cpt2]->content;
+                    }
                     $index++;
                 }
             }
