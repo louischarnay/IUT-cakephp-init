@@ -2,22 +2,20 @@
 
 namespace App\Controller;
 
-use Cake\Filesystem\File;
+use App\Model\Entity\Pictures;
 use Cake\Http\Exception\BadRequestException;
-use http\Env\Request;
+use PhpParser\Node\Expr\Array_;
+use function PHPUnit\Framework\stringEndsWith;
 
 class PicturesController extends AppController {
-    /**
-     * @var \Cake\Datasource\RepositoryInterface|null
-     */
-
     public function initialize(): void
     {
         parent::initialize();
-        $this->Authentication->allowUnauthenticated(['view', 'index', 'select']);
+        $this->Authentication->allowUnauthenticated(['view', 'index', 'select', 'api']);
     }
-    public function index() {
-        $page = $this->getRequest()->getQuery("page");
+
+    public function index(){
+        $page = $this->getRequest()->getQuery('page')??1;
         $isConnected = $this->Authentication->getresult();
         $this->set(compact($isConnected->isValid()));
         $pictures = $this->Pictures
@@ -27,9 +25,9 @@ class PicturesController extends AppController {
         $index = 0;
         if ($page * 10 - 10 >= sizeof($pictures))
             throw new BadRequestException;
-        for ($cpt = $page * 10 - 10; $cpt < $page * 10 + 1; $cpt++){
+        for ($cpt = $page * 10 - 10; $cpt < $page * 10; $cpt++){
             if($cpt < sizeof($pictures)){
-                $result[$index] = '<img src=\\..\\img\\'. $pictures[$cpt]->path .' alt="image">';
+                $result[$index] = '<img class="imgAPI" src=\\..\\img\\'. $pictures[$cpt]->path .' alt="image">';
                 $name[$index] = $pictures[$cpt]->name;
                 $index++;
             }
@@ -41,6 +39,70 @@ class PicturesController extends AppController {
         );
         $this->set(compact('array'));
         $this->set(compact('page'));
+    }
+
+    public function api($name = null) {
+        $page = $this->getRequest()->getQuery('page')??1;
+        $limit = $this->getRequest()->getQuery('limit')??10;
+        $isConnected = $this->Authentication->getresult();
+        $this->set(compact($isConnected->isValid()));
+
+        if ($name == null){
+            $pictures = $this->Pictures
+                ->find()
+                ->contain('Users')
+                ->contain('Comments')
+                ->all()
+                ->toArray();
+            $index = 0;
+            if ($page * $limit - $limit >= sizeof($pictures))
+                throw new BadRequestException;
+            for ($cpt = $page * $limit - $limit; $cpt < $page * $limit; $cpt++){
+                if($cpt < sizeof($pictures)){
+                    $userId = $pictures[$cpt]->user_id;
+                    $result[$index]['id'] = $pictures[$cpt]->id;
+                    $result[$index]['filename'] = $pictures[$cpt]->name;
+                    $result[$index]['description'] = $pictures[$cpt]->description;
+                    $result[$index]['user']['name'] = $pictures[$cpt]->user->name;
+                    $result[$index]['user']['lastname'] = $pictures[$cpt]->user->lastname;
+                    $comments = $pictures[$cpt]->comments;
+                    for ($cpt2 = 0; $cpt2 < sizeof($comments); $cpt2++){
+                        $result[$index]['comments'][$cpt2] = $comments[$cpt2]->content;
+                    }
+                    $index++;
+                }
+            }
+        }
+        else {
+            $pictures = $this->Pictures
+                ->find()
+                ->contain('Users')
+                ->contain('Comments')
+                ->where(['Pictures.name LIKE' => $name])
+                ->toArray();
+            $index = 0;
+            if ($page * $limit - $limit >= sizeof($pictures))
+                throw new BadRequestException;
+            for ($cpt = $page * $limit - $limit; $cpt < $page * $limit; $cpt++){
+                if($cpt < sizeof($pictures)){
+                    $userId = $pictures[$cpt]->user_id;
+                    $result[$index]['id'] = $pictures[$cpt]->id;
+                    $result[$index]['filename'] = $pictures[$cpt]->name;
+                    $result[$index]['description'] = $pictures[$cpt]->description;
+                    $result[$index]['user']['name'] = $pictures[$cpt]->user->name;
+                    $result[$index]['user']['lastname'] = $pictures[$cpt]->user->lastname;
+                    $comments = $pictures[$cpt]->comments;
+                    for ($cpt2 = 0; $cpt2 < sizeof($comments); $cpt2++){
+                        $result[$index]['comments'][$cpt2] = $comments[$cpt2]->content;
+                    }
+                    $index++;
+                }
+            }
+        }
+
+        $json = json_encode($result);
+        $response = $this->response->withStringBody($json);
+        return $response;
     }
 
     public function view() {
@@ -109,7 +171,7 @@ class PicturesController extends AppController {
                 $exif[$image->name]['author'] = exif_read_data($path)['Artist']??'No author';
                 $exif[$image->name]['width'] = exif_read_data($path)['COMPUTED']['Width']??'No width';
                 $exif[$image->name]['height'] = exif_read_data($path)['COMPUTED']['Height']??'No height';
-                $exif[$image->name]['html'] = 'src=/' . $path . ' alt=' . $exif[$image->name]['comment'];
+                $exif[$image->name]['html'] = 'class="imgAPI" src=/' . $path . ' alt=' . $exif[$image->name]['comment'];
                 $exif[$image->name]['created'] = $image->created;
                 $exif[$image->name]['modified'] = $image->modified;
                 $cpt = 0;
@@ -134,6 +196,7 @@ class PicturesController extends AppController {
         if ($request != null){
             if (!file_exists(WWW_ROOT.'/img/imgAPI/'.$request['picture']->getClientFilename())){
                 $idUser = $this->getRequest()->getSession()->read("Auth.id");
+
                 $file = $this->getRequest()->getData('picture');
                 $file->moveTo(WWW_ROOT. 'img/imgAPI/'.$request['picture']->getClientFileName());
                 $exif = exif_read_data((WWW_ROOT. 'img\\imgAPI\\'.$request['picture']->getClientFileName()));
@@ -157,28 +220,21 @@ class PicturesController extends AppController {
         $this->set(compact('title'));
     }
 
-    public function delete(){
-        $idUser = $this->getRequest()->getSession()->read("Auth.id");
-
-        $request = $this->getRequest()->getData();
-        if ($request != null) {
-            $file = new File(WWW_ROOT. 'img/' . $request['path']);
-            $file->delete();
-            $picture = $this->Pictures
-                ->get($request['idPicture']);
-            $this->Pictures
-                ->delete($picture);
+    public function modify($id) {
+        $userId = $this->getRequest()->getSession()->read("Auth.id");
+        $title = 'Modify Picture';
+        $picture = $this->Pictures
+        ->get($id);
+        if ($picture->user_id == $userId || $userId == 1){
+            $request = $this->getRequest()->getData();
+            if ($request != null){
+                $this->Pictures->patchEntity($picture, $this->getRequest()->getData());
+                $this->Pictures->save($picture);
+            }
+            $this->set(compact('picture'));
         }
-        if($idUser == 1){
-            $pictures = $this->Pictures
-                ->find()
-                ->toArray();
-        } else {
-            $pictures = $this->Pictures
-                ->find()
-                ->where(["user_id LIKE" => $idUser])
-                ->toArray();
+        else {
+            throw new BadRequestException;
         }
-        $this->set(compact('pictures'));
     }
 }
