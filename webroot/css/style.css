@@ -45,6 +45,13 @@ body{
 
 }
 
+img{
+    width: 25vw;
+    border: solid var(--couleurOrange) 5px;
+    display: block;
+    border-radius: 5px;
+}
+
 p{
     margin: 0 2vw;
     font-size: 1.2rem;
@@ -589,6 +596,8 @@ label.labelLoisir{
 
 #logoUCBL{
     margin-left: 2vw;
+    border: none;
+    width: 11vw;
 }
 
 #paragraphesAccueil{
