@@ -16,7 +16,6 @@ class PicturesController extends AppController {
         parent::initialize();
         $this->Authentication->allowUnauthenticated(['view', 'index', 'select']);
     }
-
     public function index() {
         $page = $this->getRequest()->getQuery("page");
         $isConnected = $this->Authentication->getresult();
