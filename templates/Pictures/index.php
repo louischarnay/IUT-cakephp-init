@@ -9,6 +9,7 @@
 
         echo $array['content'][$cpt];
         echo '<a href="/pictures/image">'.$array["content"][$cpt].'</a>';
+        echo $array['author'][$cpt];
     }
 }
 echo $this->Html->link(

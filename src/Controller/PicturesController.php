@@ -20,6 +20,7 @@ class PicturesController extends AppController {
         $this->set(compact($isConnected->isValid()));
         $pictures = $this->Pictures
             ->find()
+            ->contain('Users')
             ->all()
             ->toArray();
         $index = 0;
@@ -29,13 +30,15 @@ class PicturesController extends AppController {
             if($cpt < sizeof($pictures)){
                 $result[$index] = '<img class="imgAPI" src=\\..\\img\\'. $pictures[$cpt]->path .' alt="image">';
                 $name[$index] = $pictures[$cpt]->name;
+                $author[$index] = $pictures[$cpt]->user->name . ' ' . $pictures[$cpt]->user->lastname;
                 $index++;
             }
         }
         $array = Array(
             'title' => 'Accueil | Page ' . $page,
             'content' => $result,
-            'name' => $name
+            'name' => $name,
+            'author' => $author
         );
         $this->set(compact('array'));
         $this->set(compact('page'));
