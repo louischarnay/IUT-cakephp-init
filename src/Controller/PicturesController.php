@@ -13,7 +13,9 @@ class PicturesController extends AppController {
         parent::initialize();
         $this->Authentication->allowUnauthenticated(['view', 'index', 'select']);
     }
-    public function index(int $page) {
+
+    public function index(){
+        $page = $this->getRequest()->getQuery('page')??1;
         $isConnected = $this->Authentication->getresult();
         $this->set(compact($isConnected->isValid()));
         $pictures = $this->Pictures
@@ -23,7 +25,7 @@ class PicturesController extends AppController {
         $index = 0;
         if ($page * 10 - 10 >= sizeof($pictures))
             throw new BadRequestException;
-        for ($cpt = $page * 10 - 10; $cpt < $page * 10 + 1; $cpt++){
+        for ($cpt = $page * 10 - 10; $cpt < $page * 10; $cpt++){
             if($cpt < sizeof($pictures)){
                 $result[$index] = '<img src=\\..\\img\\'. $pictures[$cpt]->path .' alt="image">';
                 $index++;
@@ -35,6 +37,60 @@ class PicturesController extends AppController {
         );
         $this->set(compact('array'));
         $this->set(compact('page'));
+    }
+
+    public function api($name = null) {
+        $page = $this->getRequest()->getQuery('page')??1;
+        $limit = $this->getRequest()->getQuery('limit')??10;
+        $isConnected = $this->Authentication->getresult();
+        $this->set(compact($isConnected->isValid()));
+        
+        if ($name == null){
+            $pictures = $this->Pictures
+                ->find()
+                ->all()
+                ->toArray();
+            $index = 0;
+            if ($page * $limit - $limit >= sizeof($pictures))
+                throw new BadRequestException;
+            for ($cpt = $page * $limit - $limit; $cpt < $page * $limit; $cpt++){
+                if($cpt < sizeof($pictures)){
+                    $result[$index]['path'] = $pictures[$cpt]->path;
+                    $result[$index]['name'] = $pictures[$cpt]->name;
+                    $result[$index]['description'] = $pictures[$cpt]->description;
+                    $result[$index]['width'] = $pictures[$cpt]->width;
+                    $result[$index]['height'] = $pictures[$cpt]->height;
+                    $result[$index]['created'] = $pictures[$cpt]->created;
+                    $result[$index]['modified'] = $pictures[$cpt]->modified;
+                    $index++;
+                }
+            }
+        }
+        else {
+            $pictures = $this->Pictures
+                ->find()
+                ->where(['name LIKE' => $name])
+                ->toArray();
+            $index = 0;
+            if ($page * $limit - $limit >= sizeof($pictures))
+                throw new BadRequestException;
+            for ($cpt = $page * $limit - $limit; $cpt < $page * $limit; $cpt++){
+                if($cpt < sizeof($pictures)){
+                    $result[$index]['path'] = $pictures[$cpt]->path;
+                    $result[$index]['name'] = $pictures[$cpt]->name;
+                    $result[$index]['description'] = $pictures[$cpt]->description;
+                    $result[$index]['width'] = $pictures[$cpt]->width;
+                    $result[$index]['height'] = $pictures[$cpt]->height;
+                    $result[$index]['created'] = $pictures[$cpt]->created;
+                    $result[$index]['modified'] = $pictures[$cpt]->modified;
+                    $index++;
+                }
+            }
+        }
+        
+        $json = json_encode($result);
+        $response = $this->response->withStringBody($json);
+        return $response;
     }
 
     public function view() {
