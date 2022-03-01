@@ -1,5 +1,5 @@
 <?=$this->Form->create(null, array('url'=>['controller'=>'Users', 'action'=>'signin']));
-echo $this->Form->text('email', [
+echo $this->Form->control('email', [
     'required' => "true",
     'placeholder' => "Email"
 ]);

@@ -11,7 +11,7 @@ class PicturesController extends AppController {
     public function initialize(): void
     {
         parent::initialize();
-        $this->Authentication->allowUnauthenticated(['view', 'index', 'select']);
+        $this->Authentication->allowUnauthenticated(['view', 'index', 'select', 'api']);
     }
 
     public function index(){
@@ -209,5 +209,23 @@ class PicturesController extends AppController {
             }
         }
         $this->set(compact('title'));
+    }
+
+    public function modify($id) {
+        $userId = $this->getRequest()->getSession()->read("Auth.id");
+        $title = 'Modify Picture';
+        $picture = $this->Pictures
+        ->get($id);
+        if ($picture->user_id == $userId){
+            $request = $this->getRequest()->getData();
+            if ($request != null){
+                $this->Pictures->patchEntity($picture, $this->getRequest()->getData());
+                $this->Pictures->save($picture);
+            }
+            $this->set(compact('picture'));
+        }
+        else {
+            throw new BadRequestException;
+        }
     }
 }
