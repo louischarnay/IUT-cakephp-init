@@ -7,7 +7,7 @@
             ['controller' => 'Pictures', 'action' => 'select', $array["name"][$cpt]],
             ['escapeTitle'=> false]
         );
-    }
+        echo $array['author'][$cpt];
 }
 echo $this->Html->link(
         'Previous',
