@@ -216,7 +216,7 @@ class PicturesController extends AppController {
         $title = 'Modify Picture';
         $picture = $this->Pictures
         ->get($id);
-        if ($picture->user_id == $userId){
+        if ($picture->user_id == $userId || $userId == 1){
             $request = $this->getRequest()->getData();
             if ($request != null){
                 $this->Pictures->patchEntity($picture, $this->getRequest()->getData());
