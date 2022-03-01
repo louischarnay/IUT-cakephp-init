@@ -46,7 +46,6 @@ class PicturesController extends AppController {
         $limit = $this->getRequest()->getQuery('limit')??10;
         $isConnected = $this->Authentication->getresult();
         $this->set(compact($isConnected->isValid()));
-        
         if ($name == null){
             $pictures = $this->Pictures
                 ->find()
@@ -99,7 +98,6 @@ class PicturesController extends AppController {
                 }
             }
         }
-        
         $json = json_encode($result);
         $response = $this->response->withStringBody($json);
         return $response;

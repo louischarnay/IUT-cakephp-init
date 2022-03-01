@@ -8,7 +8,7 @@ class UsersTable extends Table {
     public function initialize(array $config): void
     {
         parent::initialize($config);
-        $this->hasMany('Pictures');
         $this->addBehavior('Timestamp');
+        $this->hasMany('Pictures')->setDependent(true);
     }
 }
