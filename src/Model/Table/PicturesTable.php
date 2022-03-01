@@ -8,7 +8,7 @@ class PicturesTable extends Table {
     public function initialize(array $config): void
     {
         parent::initialize($config);
-        $this->hasMany('Comments');
+        $this->hasMany('Comments')->setDependent(true);
         $this->addBehavior('Timestamp');
     }
 }

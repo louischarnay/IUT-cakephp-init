@@ -18,11 +18,9 @@ if(isset($comments)){
 }else{
     ?><p>There is no comment yet on this picture</p><?php
 }
-if($isConnected){
-    echo '<p>Add your commment</p>';
-    echo $this->Form->create(null, array('url'=>['controller'=>'Comments', 'action'=>'add', $image->id]));
-    echo $this->Form->control('content');
-    echo $this->Form->button('add');
-    echo $this->Form->end();
-}
+echo '<p>Add your commment</p>';
+echo $this->Form->create(null, array('url'=>['controller'=>'Comments', 'action'=>'add', $image->id]));
+echo $this->Form->control('content');
+echo $this->Form->button('add');
+echo $this->Form->end();
 

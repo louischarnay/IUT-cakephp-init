@@ -13,7 +13,8 @@ class PicturesController extends AppController {
         parent::initialize();
         $this->Authentication->allowUnauthenticated(['view', 'index', 'select']);
     }
-    public function index(int $page) {
+    public function index() {
+        $page = $this->getRequest()->getQuery("page");
         $isConnected = $this->Authentication->getresult();
         $this->set(compact($isConnected->isValid()));
         $pictures = $this->Pictures
@@ -26,12 +27,14 @@ class PicturesController extends AppController {
         for ($cpt = $page * 10 - 10; $cpt < $page * 10 + 1; $cpt++){
             if($cpt < sizeof($pictures)){
                 $result[$index] = '<img src=\\..\\img\\'. $pictures[$cpt]->path .' alt="image">';
+                $name[$index] = $pictures[$cpt]->name;
                 $index++;
             }
         }
         $array = Array(
             'title' => 'Accueil | Page ' . $page,
-            'content' => $result
+            'content' => $result,
+            'name' => $name
         );
         $this->set(compact('array'));
         $this->set(compact('page'));
@@ -117,12 +120,6 @@ class PicturesController extends AppController {
                 $this->set(compact('exif'));
                 $this->set(compact('comments'));
             }
-            $isConnected = false;
-            $connection = $this->Authentication->getResult();
-            if($connection->isValid()){
-                $isConnected = true;
-            }
-            $this->set(compact('isConnected'));
             $root = WWW_ROOT.'img\imgAPI\\';
             $this->set(compact('root'));
         }
@@ -133,6 +130,8 @@ class PicturesController extends AppController {
         $request = $this->getRequest()->getData();
         if ($request != null){
             if (!file_exists(WWW_ROOT.'/img/imgAPI/'.$request['picture']->getClientFilename())){
+                $idUser = $this->getRequest()->getSession()->read("Auth.id");
+
                 $file = $this->getRequest()->getData('picture');
                 $file->moveTo(WWW_ROOT. 'img/imgAPI/'.$request['picture']->getClientFileName());
                 $exif = exif_read_data((WWW_ROOT. 'img\\imgAPI\\'.$request['picture']->getClientFileName()));
@@ -141,7 +140,8 @@ class PicturesController extends AppController {
                 'path' => 'imgAPI/'.$request['picture']->getClientFileName(),
                 'description' => $request['description']??null,
                 'width' => $exif['COMPUTED']['Width']??null,
-                'height' => $exif['COMPUTED']['Height']??null
+                'height' => $exif['COMPUTED']['Height']??null,
+                'user_id' =>$idUser
                 );
                 $picture = $this->Pictures->newEmptyEntity();
                 $this->Pictures->patchEntity($picture, $data);

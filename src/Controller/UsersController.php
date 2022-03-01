@@ -13,7 +13,7 @@ class UsersController extends AppController
     public function login(){
         $user = $this->Users->newEmptyEntity();
         $result = $this->Authentication->getResult();
-        if($result->isValid()){
+        if($result->isValid()) {
             $target = $this->Authentication->getLoginRedirect() ?? '/';
             return $this->redirect($target);
         }
