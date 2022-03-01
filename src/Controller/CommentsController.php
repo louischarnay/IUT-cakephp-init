@@ -2,6 +2,8 @@
 
 namespace App\Controller;
 
+use Cake\Filesystem\File;
+
 class CommentsController extends AppController
 {
     public function add($id){
@@ -15,5 +17,29 @@ class CommentsController extends AppController
         $this->Comments->save($comment);
         $this->Flash->success('commentaire ajouté');
         return $this->redirect($this->referer());
+    }
+
+    public function delete(){
+        $idUser = $this->getRequest()->getSession()->read("Auth.id");
+
+        $request = $this->getRequest()->getData();
+        if ($request != null) {
+            $comment = $this->Comments
+                ->get($request['idComment']);
+            $this->Comments
+                ->delete($comment);
+        }
+        if($idUser == 1){
+            $comments = $this->Comments
+                ->find()
+                ->toArray();
+            dd($comments);
+        } else {
+            $comments = $this->Comments
+                ->find()
+                ->where(["user_id LIKE" => $idUser])
+                ->toArray();
+        }
+        $this->set(compact('comments'));
     }
 }

@@ -4,11 +4,9 @@
     if(isset($array['content'][$cpt])){
         echo $this->Html->link(
             $array["content"][$cpt],
-            ['controller' => 'Pictures', 'action' => 'select', $array["name"][$cpt]]
+            ['controller' => 'Pictures', 'action' => 'select', $array["name"][$cpt]],
+            ['escapeTitle'=> false]
         );
-
-        echo $array['content'][$cpt];
-        echo '<a href="/pictures/image">'.$array["content"][$cpt].'</a>';
     }
 }
 echo $this->Html->link(

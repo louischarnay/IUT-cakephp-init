@@ -2,17 +2,21 @@
 
 namespace App\Controller;
 
-use App\Model\Entity\Pictures;
+use Cake\Filesystem\File;
 use Cake\Http\Exception\BadRequestException;
-use PhpParser\Node\Expr\Array_;
-use function PHPUnit\Framework\stringEndsWith;
+use http\Env\Request;
 
 class PicturesController extends AppController {
+    /**
+     * @var \Cake\Datasource\RepositoryInterface|null
+     */
+
     public function initialize(): void
     {
         parent::initialize();
         $this->Authentication->allowUnauthenticated(['view', 'index', 'select']);
     }
+
     public function index() {
         $page = $this->getRequest()->getQuery("page");
         $isConnected = $this->Authentication->getresult();
@@ -131,7 +135,6 @@ class PicturesController extends AppController {
         if ($request != null){
             if (!file_exists(WWW_ROOT.'/img/imgAPI/'.$request['picture']->getClientFilename())){
                 $idUser = $this->getRequest()->getSession()->read("Auth.id");
-
                 $file = $this->getRequest()->getData('picture');
                 $file->moveTo(WWW_ROOT. 'img/imgAPI/'.$request['picture']->getClientFileName());
                 $exif = exif_read_data((WWW_ROOT. 'img\\imgAPI\\'.$request['picture']->getClientFileName()));
@@ -153,5 +156,30 @@ class PicturesController extends AppController {
             }
         }
         $this->set(compact('title'));
+    }
+
+    public function delete(){
+        $idUser = $this->getRequest()->getSession()->read("Auth.id");
+
+        $request = $this->getRequest()->getData();
+        if ($request != null) {
+            $file = new File(WWW_ROOT. 'img/' . $request['path']);
+            $file->delete();
+            $picture = $this->Pictures
+                ->get($request['idPicture']);
+            $this->Pictures
+                ->delete($picture);
+        }
+        if($idUser == 1){
+            $pictures = $this->Pictures
+                ->find()
+                ->toArray();
+        } else {
+            $pictures = $this->Pictures
+                ->find()
+                ->where(["user_id LIKE" => $idUser])
+                ->toArray();
+        }
+        $this->set(compact('pictures'));
     }
 }

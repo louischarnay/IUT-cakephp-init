@@ -2,6 +2,8 @@
 
 namespace App\Controller;
 
+use Cake\Http\Exception\UnauthorizedException;
+
 class UsersController extends AppController
 {
     public function initialize(): void
@@ -54,5 +56,34 @@ class UsersController extends AppController
         $this->Authentication->logout();
         $target = $this->Authentication->getLoginRedirect() ?? '/';
         return $this->redirect($target);
+    }
+
+    public function delete($id){
+        $this->getRequest()->allowMethod('post');
+        if($this->getRequest()->getSession()->read("Auth.id") !=1){
+            throw new UnauthorizedException();
+        }
+        $user = $this->Users
+            ->get($id);
+        if($id != 1){
+            if($this->Users->delete($user)){
+                $this->Flash->success('supprimé');
+            }else{
+                $this->Flash->error('error');
+            }
+        } else{
+            $this->Flash->error('Impossible de supprimer l\'admnisitrateur');
+        }
+        return $this->redirect($this->referer());
+    }
+
+    public function view(){
+        if($this->getRequest()->getSession()->read("Auth.id") !=1){
+            throw new UnauthorizedException();
+        }
+        $users = $this->Users
+            ->find()
+            ->toArray();
+        $this->set(compact('users'));
     }
 }
