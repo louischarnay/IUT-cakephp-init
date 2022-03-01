@@ -45,7 +45,7 @@ body{
 
 }
 
-img{
+.imgAPI{
     width: 25vw;
     border: solid var(--couleurOrange) 5px;
     display: block;
@@ -596,8 +596,6 @@ label.labelLoisir{
 
 #logoUCBL{
     margin-left: 2vw;
-    border: none;
-    width: 11vw;
 }
 
 #paragraphesAccueil{

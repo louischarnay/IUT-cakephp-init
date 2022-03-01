@@ -27,7 +27,7 @@ class PicturesController extends AppController {
             throw new BadRequestException;
         for ($cpt = $page * 10 - 10; $cpt < $page * 10; $cpt++){
             if($cpt < sizeof($pictures)){
-                $result[$index] = '<img src=\\..\\img\\'. $pictures[$cpt]->path .' alt="image">';
+                $result[$index] = '<img class="imgAPI" src=\\..\\img\\'. $pictures[$cpt]->path .' alt="image">';
                 $index++;
             }
         }
@@ -159,7 +159,7 @@ class PicturesController extends AppController {
                 $exif[$image->name]['author'] = exif_read_data($path)['Artist']??'No author';
                 $exif[$image->name]['width'] = exif_read_data($path)['COMPUTED']['Width']??'No width';
                 $exif[$image->name]['height'] = exif_read_data($path)['COMPUTED']['Height']??'No height';
-                $exif[$image->name]['html'] = 'src=/' . $path . ' alt=' . $exif[$image->name]['comment'];
+                $exif[$image->name]['html'] = 'class="imgAPI" src=/' . $path . ' alt=' . $exif[$image->name]['comment'];
                 $exif[$image->name]['created'] = $image->created;
                 $exif[$image->name]['modified'] = $image->modified;
                 $cpt = 0;
