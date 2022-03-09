@@ -3,7 +3,6 @@
 <?php for ($cpt = 0; $cpt < 10; $cpt++){
     if(isset($array['content'][$cpt])){
         echo $this->Html->link(
-            $array["content"][$cpt],
             ['controller' => 'Pictures', 'action' => 'select', $array["name"][$cpt]],
             ['escapeTitle'=> false]
         );
