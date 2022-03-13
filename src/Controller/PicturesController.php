@@ -28,7 +28,7 @@ class PicturesController extends AppController {
             throw new BadRequestException;
         for ($cpt = $page * 10 - 10; $cpt < $page * 10; $cpt++){
             if($cpt < sizeof($pictures)){
-                $result[$index] = '<img class="imgAPI" src=\\..\\img\\'. $pictures[$cpt]->path .' alt="image">';
+                $result[$index] = $pictures[$cpt]->path;
                 $name[$index] = $pictures[$cpt]->name;
                 $author[$index] = $pictures[$cpt]->user->name . ' ' . $pictures[$cpt]->user->lastname;
                 $index++;
