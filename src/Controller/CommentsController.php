@@ -33,7 +33,6 @@ class CommentsController extends AppController
             $comments = $this->Comments
                 ->find()
                 ->toArray();
-            dd($comments);
         } else {
             $comments = $this->Comments
                 ->find()
